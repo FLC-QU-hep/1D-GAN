@@ -29,14 +29,14 @@ def save(netG, netD, omtim_G, optim_D, epoch, loss, scores, z, path_to_save):
                 'epoch': epoch,
                 'loss': loss,
                 'D_scores': scores,
-                'z' : z
+                # 'z' : z
                 },
                 path_to_save)
 
 
 print(f'workers: {cfg.workers}, bs: {cfg.bs}, beta1: {cfg.beta1}, lr: {cfg.lr}, pin_memory: {cfg.pin_memory}, netG loss: {cfg.generator_loss}, gLossFactor: {cfg.gLossFactor}')
 print(f'checkpoint: {cfg.checkpoint}')
-train_folder = f'{cfg.path2save}/{cfg.name}_WU-{cfg.wormup}_bs{cfg.bs}_lr{cfg.lr}Gx{cfg.gLossFactor}_Loss{cfg.generator_loss}_gamma{cfg.gamma}_{cfg.noise}Noise_fake2realRatio{cfg.fake2realRatio}'
+train_folder = f'{cfg.path2save}/{cfg.name}_WU-{cfg.wormup}_bs{cfg.bs}_lr{cfg.lr}Gx{cfg.gLossFactor}_L2RD{cfg.weight_decayD}_L2RG{cfg.weight_decayG}_Loss{cfg.generator_loss}_gamma{cfg.gamma}_{cfg.noise}Noise_fake2realRatio{cfg.fake2realRatio}'
 if not os.path.exists(train_folder):
     os.makedirs(train_folder)
 print(f'train_folder: {train_folder}')
@@ -64,8 +64,8 @@ netD.apply(GNet.weights_init)
 netD.to(device)
 
 
-optimizer_G = torch.optim.Adam(netG.parameters(), lr=cfg.lr*cfg.gLossFactor, betas=(cfg.beta1, 0.999))
-optimizer_D = torch.optim.Adam(netD.parameters(), lr=cfg.lr, betas=(cfg.beta1, 0.999))
+optimizer_G = torch.optim.Adam(netG.parameters(), lr=cfg.lr*cfg.gLossFactor, betas=(cfg.beta1, 0.999), weight_decay=cfg.weight_decayG)
+optimizer_D = torch.optim.Adam(netD.parameters(), lr=cfg.lr, betas=(cfg.beta1, 0.999), weight_decay=cfg.weight_decayD)
 criterion = nn.BCEWithLogitsLoss()
 MSEcriterion = nn.MSELoss()
 
@@ -226,5 +226,5 @@ if __name__ == '__main__':
             loss = {'G_losses': GL, 'D_losses': D_losses}
             D_scores = np.array([D_scores_x, D_scores_z1, D_scores_z2])
 
-            save(netG=netG, netD=netD, omtim_G=optimizer_G, optim_D=optimizer_D, epoch=epoch, loss=loss, scores=D_scores, z=z,
+            save(netG=netG, netD=netD, omtim_G=optimizer_G, optim_D=optimizer_D, epoch=epoch, loss=loss, scores=D_scores,
                 path_to_save=PATH_save)

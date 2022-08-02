@@ -22,7 +22,7 @@ class Generator(nn.Module):
 
         self.TransConv = nn.Sequential(
 
-            nn.ConvTranspose1d(1024, 8192, 2, 1, 0, bias=False),
+            nn.ConvTranspose1d(cfg.nz, 8192, 2, 1, 0, bias=False),
             nn.BatchNorm1d(8192),
             nn.LeakyReLU(True),
             
@@ -146,7 +146,7 @@ class GeneratorS(nn.Module):
 
         self.TransConv = nn.Sequential(
 
-            nn.ConvTranspose1d(100, 8192, 2, 1, 0, bias=False),
+            nn.ConvTranspose1d(cfg.nz, 8192, 2, 1, 0, bias=False),
             # nn.BatchNorm1d(8192),
             # nn.LeakyReLU(True),
             

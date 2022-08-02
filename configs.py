@@ -11,6 +11,7 @@ class Configs():
         # labels for training
         self.Emax = 1
         self.Emin = 1
+
     # Discriminator
         self.nfd = 32
 
@@ -26,9 +27,11 @@ class Configs():
         self.n_epochs = 200
         self.lr = 0.0001
         self.beta1 = 0.5
-        self.generator_loss = 'MSE+BCE'
+        self.weight_decayD = 0.1
+        self.weight_decayG = 0
+        self.generator_loss = 'BCE'
         self.gLossFactor = 1
-        self.gamma = 0.3
+        self.gamma = 25 
 
 
     # Others
