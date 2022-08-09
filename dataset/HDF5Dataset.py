@@ -23,7 +23,7 @@ class PointCloudDataset(Dataset):
 
     def __getitem__(self, idx):
         
-        event = self.dataset['events'][idx][:, -1296:]
+        event = self.dataset['events'][idx][:, -34992:]
         
         event[2, :][event[2, :] > 0] = event[2, :][event[2, :] > 0] - 40 # z shift
         event[3, :] = event[3, :] * 1000 # energy scale

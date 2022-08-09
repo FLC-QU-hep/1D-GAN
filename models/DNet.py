@@ -6,6 +6,8 @@ class Discriminator(nn.Module):
     def __init__(self, cfg):
         super(Discriminator, self).__init__()
 
+        self.nfd = cfg.nfd
+
         self.MainConv = nn.Sequential(
             nn.Conv1d(4, cfg.nfd, 3, 3, 0, bias=False),
             nn.BatchNorm1d(cfg.nfd),
@@ -54,7 +56,7 @@ class Discriminator(nn.Module):
 
     def forward(self, x):
         x = self.MainConv(x)
-        x = x.reshape(-1, 1024)
+        x = x.reshape(-1, self.nfd*32)
         x = self.Classifier(x)
         return x
 
